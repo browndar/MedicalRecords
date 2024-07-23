@@ -24,6 +24,12 @@ assuming no failures, you can simply run the main class
 
 ./gradlew run
 
+this will run the program against the supplied example. The program also takes a single argument specifying the document to process
+
+ ./gradlew run --args="ChartNotes.txt"
+
+In this case ChartNotes.txt is a sibling file of build.gradle.kts at the root of the repository
+
 # Some notes
 
 ## My approach
@@ -35,19 +41,29 @@ My approach was to stream the document until I reach a threshold of tokens. Then
 * I generate a title from the summary using predict text
 * I generate an outline from the summary using predict text
 
-All of these tasks are done with prompts of the form
+I then write all of these out to a serializable class and use the json library to produce the output which is logged. 
+
+All of these tasks are done with prompts of the form of
 
 ````
-verbatim
+DOCUMENT
+
+Q: this is a training prompt
+A: I answer my own training prompt
+
+Q: this is the predict text prompt?
+A:
 ````
 
-* I decided to mostly allow genai to produce the entire extraction. If I was doing document extraction in production I would spend a fair amount of time learning about the documents I was going to work against and if there were any hard rules that I could work off of. I would Work first to take the structure out that I know about and then use genai to help woth some of the processes that I've had good luck with such as statistics and metrics extraction or summarization. For example, with the provided document I might split the document by the "Chart Notes" separator. But I decided to just stream the document until I got to a defined limit on tokens.
-* and then 1) Keep a running summary of the document and then combine that summary with the current promot to form a running summary of the document
+I then extract the answer returned back
 
-## Some assumptions
+## Some comments about my approach
 
+* Completely automated extraction. I decided to mostly allow genai to produce the entire extraction. If I was doing document extraction in production I would spend a fair amount of time learning about the documents I was going to work against and if there were any hard rules that I could work off of. I would work first to take the structure out that I know about and then use genai to help woth some of the processes that I've had good luck with such as statistics and metrics extraction or summarization. For example, with the provided document I might split the document by the "Chart Notes" separator. But I decided to just stream the document until I got to a defined limit on tokens.
+* Allowing genai to provide json. I specify format as part of the prompt. There are two places where I do this to get structured json extracted from the document. In production this might be brittle and I would do some work validating the return and failing back to other forms of extraction if the model failed to produce desired results. Here if the extraction fails I just leave it blank.
 * Vertex auth. If I were hosting a solution I would have better options on using the vertex api without supplying service creds but this seemed like a viable solution for having conversations around prompt engineering and such. But I'm assuming that this sort of infrastructure considerations are not incredibly important to our current discussions.
-* Prompt limits. Usually prompts have to be something like 4K tokens or less. There are certainly edge cases around summarizing the doc 
+* Prompt limits. Usually prompts have to be something like 4K tokens or less. There are certainly edge cases around summarizing large docs. My overall summary would overcome that limit with larger documents. 
+* Rolling summary. For sufficiently large documents you can't just throw one prompt at a model to get a summary. I illustrated a couple of approached, such as building a summary as you iterate through the document as I do with the actual summary field, or looking to extract what I can as I iterate through the document as I do with the entities data structure. These are illustrations.
 
 ## Learning some new tricks
 
