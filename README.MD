@@ -8,7 +8,7 @@ This project is meant to illustrate some ideas around extracting information fro
 
 This project is hosted on github and is available publicly
 
-git clone git@github.com:browndar/MedicalRecords.git
+[git clone git@github.com:browndar/MedicalRecords.git]
 
 ## add service credentials
 
