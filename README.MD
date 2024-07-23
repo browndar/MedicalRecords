@@ -34,12 +34,12 @@ In this case ChartNotes.txt is a sibling file of build.gradle.kts at the root of
 
 ## My approach
 
-My approach was to stream the document until I reach a threshold of tokens. Then I process the document thus far, keeping track of a running summary and a list of key entities. After I have run through the entire document:
+My approach was to stream the document until I reach a threshold of tokens. Then I process the document thus far, keeping track of a running summary a list of key entities, and a running outline. After I have run through the entire document:
 
 * I finalize the summary with a predict call, 
 * I write out the entities that have been discovered, 
+* I collect the outline
 * I generate a title from the summary using predict text
-* I generate an outline from the summary using predict text
 
 I then write all of these out to a serializable class and use the json library to produce the output which is logged. 
 
@@ -59,6 +59,60 @@ A:
 * I can guide training by asking an answering my own questions
 * Finally I can ask a quesiton of the model. 
 * The prompts can all by found in the constant class
+
+Here is the example output for the provided document:
+
+````
+{
+ "title": "Jane Doe - Patient Report",
+ "entities": {
+  "name": "Jane Doe",
+  "date of birth": "02/02/1878",
+  "location": "3800 West Slaughter Lane, Austin, TX 78000"
+ },
+ "summary": "Jane Doe is a 42-year-old female who presented to the office today for complaint(s) resulting from an automobile vs. automobile incident. She presented for treatment today, complaining of frequent (50%-75%) sharp pain, shooting and diffusediscomfort in the back of the neck, upper back, chest, mid back, low back, right shoulder both hips, right leg andfrequent headaches. She rated the intensity of discomfort, using a VAS, as a level 6 on a scale of 1 to 10 with10 being the most severe. The discomfort was reported to increase with movement, applied pressure,prolonged sitting and coughing/sneezing.",
+ "outline": {
+  "history of present illness": [
+   "Jane Doe is a 42-year-old female who presented to the office today for complaint(s) resulting from an automobile vs. automobile incident having completed the patient intake questionnaire. The questionnaire was reviewed and annotated by the examining provider as needed. The completed questionnaire is in the patient's permanent paper file and available for review. She signed consent for evaluation and possible treatment of injuries sustained as a direct result of the accident that occurred on or about 12/17/2020."
+  ],
+  "Objective": [
+   "Spinal Restriction(s)/Subluxation(s): occiput, C1, right C2, right C3, right C4, right C5, right C6, right C7, right T1, right T2, T3, T4, T5, L1, L2, T12, right pelvis, right sacrum, right L5, right L4 and right L3",
+   "Extraspinal Restrictions/Subluxations: right shoulder and right hip",
+   "Pain/Tenderness: upper to mid cervical, mid to lower cervical, cervico-thoracic, thoraco-lumbar, upperlumbar, lower lumbar and shoulder",
+   "Postural Analysis: high right shoulder and head rotation right",
+   "Muscle Spasm(s): moderate muscle spasms in the following areas; left cervical, right cervical, right cervicaldorsal, upper thoracic, right posterior shoulder, right mid thoracic, mid thoracic, right lower thoracic, rightlumbar, lumbar, left sacroiliac, sacral, right sacroiliac, right pelvic, right buttock, right posterior leg and right hip",
+   "ROM Concern(s): entire lumbar and cervical spine, thoracic flexion and thoracic extension was recorded asmoderately reduced with pain noted",
+   "Pelvis: right sacroiliac joint was noted to be restricted",
+   "Gait: antalgic gait was noted",
+   "Neurologic: negative straight leg raise bilaterally",
+   "Reflexes: 2+ bilaterally",
+   "Sensation: intact bilaterally",
+   "Range of Motion: cervical flexion 45 degrees, extension 45 degrees, right rotation 45 degrees, left rotation 45 degrees, right lateral bending 45 degrees, left lateral bending 45 degrees, thoracic flexion 45 degrees, extension 45 degrees, right rotation 45 degrees, left rotation 45 degrees, right lateral bending 45 degrees, left lateral bending 45 degrees, lumbar flexion 45 degrees, extension 45 degrees, right rotation 45 degrees, left rotation 45 degrees, right lateral bending 45 degrees, left lateral bending 45 degrees",
+   "Special Tests: Spurling's test was negative bilaterally"
+  ],
+  "Complaints": [
+   "back of the neck",
+   "upper back",
+   "chest",
+   "mid back",
+   "low back",
+   "right shoulder",
+   "both hips",
+   "right leg",
+   "frequent headaches"
+  ],
+  "Treatment": [
+   "Myofascial Release was applied to the right shoulder and right hip",
+   "Electrical stimulation in the form of pre-modulated current was applied to cervical dorsal, shoulder and thoracic",
+   "Moist heat was applied to the right shoulder and right hip",
+   "Mechanical traction was implemented to the right shoulder and right hip"
+  ],
+  "chief complaint": [
+   "frequent (50%-75%) sharp pain, shooting and diffusediscomfort in the back of the neck, upper back, chest, mid back, low back, right shoulder both hips, right leg andfrequent headaches"
+  ]
+ }
+}
+````
 
 ## Some comments about my approach
 
