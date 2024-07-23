@@ -29,7 +29,7 @@ class PredictTextSummarizer(
 
         if (cache != null) {
             if (cache.containsKey(content = content, prompt = question)) {
-                var responseContent = cache.get(content = content, prompt = question)
+                val responseContent = cache.get(content = content, prompt = question)
                 // log cached responseContent
                 logger.info { "Cached response: [question = $question], [response = $responseContent]"}
 
@@ -44,7 +44,7 @@ class PredictTextSummarizer(
         val predictTextSummarizer = PredictTextSummarizer()
         val summarization= predictTextSummarizer.predictTextSummarization(instance=fullPrompt)!!
 
-        var prediction = summarization.getPredictions(0)
+        val prediction = summarization.getPredictions(0)
         val responseContent = prediction.getStructValue().getFieldsOrThrow("content")
 
         val responseString = responseContent.stringValue
