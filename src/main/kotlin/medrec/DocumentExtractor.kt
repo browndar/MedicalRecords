@@ -1,4 +1,5 @@
 package medrec
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -14,17 +15,11 @@ import medrec.utils.Utils
 import mu.KotlinLogging
 
 /**
- *
+ * Extract information from a document using a set of prompts run against vertexai api
  */
 class DocumentExtractor(
     // file to process
     val filePath: String,
-
-    // some documents can probably be broken down into smaller documents the separator is used to mark a new document
-    var separator: String = null.toString(),
-    // not going to impliment this but instead of just wating until we hit token limit can we give a hint to the
-    // extractor about how the document should be broken down?
-    var useSeparator: Boolean = false,
 
     // max tokens to feed into a model
     var maxTokens: Int = 3000,
@@ -63,6 +58,7 @@ class DocumentExtractor(
      * number of tokens that I will send to the model and collect information as I go. When I finish
      * processing these chunks then I will take the summaries collected and build the requested information.
      */
+    @OptIn(ExperimentalSerializationApi::class)
     fun process() {
         var cache: PromptCache? = null
         if (useCache) {

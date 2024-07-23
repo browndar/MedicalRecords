@@ -1,17 +1,11 @@
 package medrec
 
-import medrec.utils.Utils
-
 /**
  * have a bunch of constants here so that we can easily move this logic to configurations
  */
 class Constants {
     companion object {
-        val API_PATH = "/apiKey.txt"
-        val API_KEY = Utils.INSTANCE.getResourceAsText(API_PATH)
-
         val CREDENTIALS_PATH = "/medrec-429721-b51b01a2770d.json"
-        val GOOGLE_APPLICATION_CREDENTIALS_ENV = "GOOGLE_APPLICATION_CREDENTIALS"
 
         // llm arguments
         val MODEL_PARAMS = """{

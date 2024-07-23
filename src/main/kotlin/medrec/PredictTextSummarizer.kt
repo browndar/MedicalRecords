@@ -7,6 +7,9 @@ import mu.KotlinLogging
 import java.io.IOException
 
 
+/**
+ * Built off of example code from vertex docs
+ */
 class PredictTextSummarizer(
     val parameters: String = Constants.MODEL_PARAMS,
     val project: String = Constants.MODEL_PROJECT,
