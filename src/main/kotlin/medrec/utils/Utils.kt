@@ -67,6 +67,10 @@ class Utils private constructor() {
     }
 
     fun importPromptCache(path: String) : PromptCache {
+        if (!File(path).exists()) {
+            logger.info { "no prompt cache found at ${File(path).absolutePath}. Starting new cache" }
+            return PromptCache()
+        }
         val jsonString = File(path).readText()
         return Json.decodeFromString<PromptCache>(jsonString)
     }
