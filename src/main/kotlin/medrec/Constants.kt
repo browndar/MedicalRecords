@@ -50,7 +50,7 @@ class Constants {
             
             """.trimIndent()
 
-        val SUMMARY_PROMPT = "Given the summary of the document thusfar and this new content can you update the summary?"
+        val SUMMARY_PROMPT = "Given the summary of the document so far and this new content can you update the summary?"
 
         val SUMMERIZE_SUMMARIES_PROMPT = "Can you summarize the the above document succinctly?"
 
@@ -64,9 +64,9 @@ class Constants {
             
             """.trimIndent()
 
-        val EXTRACT_ENTITIES_PROMPT = "Extract names and values of important entities such as name, date of birth, location in the above document as a flattened json hashmap?"
+        val EXTRACT_ENTITIES_PROMPT = "Extract names and values of entities in this document including but not limited to name, date of birth, patient location, accident location, phone, fax, account, insurance company, insured id in the above document as a flattened json hashmap?"
 
-        val OUTLINE_PROMPT = "Extract a two-tiered outline from this document as json objects where the name is the top tier and the value is a list of strings in the bottom tier"
+        val OUTLINE_PROMPT = "Can you summarize this document in small outline consisting of a map of json elements?"
 
 
     }

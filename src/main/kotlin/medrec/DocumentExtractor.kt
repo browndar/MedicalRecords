@@ -1,15 +1,17 @@
 package medrec
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 import medrec.Constants.Companion.CACHE_LOC
 import medrec.Constants.Companion.TEMPLATE
 import medrec.Constants.Companion.TEMPLATE_RUNNING_ENTITIES
 import medrec.Constants.Companion.TEMPLATE_RUNNING_SUMMARY
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import medrec.model.DocumentSummary
 import medrec.model.PromptCache
-import mu.KotlinLogging
 import medrec.utils.Utils
+import mu.KotlinLogging
 
 /**
  *
@@ -46,6 +48,8 @@ class DocumentExtractor(
     var title: String = "Document Title",
 
     var summary: String = "There is no summary yet.",
+
+    var outline: ArrayList<Map.Entry<String, JsonElement>> = ArrayList(),
 
     // this will ultimately be the output of the summarization
     var documentSummary: DocumentSummary = DocumentSummary()
@@ -110,25 +114,7 @@ class DocumentExtractor(
 
         documentSummary.entities = entities
 
-        val outlineText = summarizer.predictTextSummarization(
-            template = TEMPLATE,
-            content = summary,
-            question = outlinePrompt
-        )
-
-        // these are places that we'll have to add robustness. The model of course will not always give us the format
-        // we are looking for. We could accomodate by asking different questions based on the corpus of documents that
-        // we are trying to analyze. It all doesn't have to be llm-based. We could pull some stuctured docs out if
-        // structure is known to exists. Finally, we can catch json errors and just have empty elements as well.
-
-        if (outlineText != null) {
-            try {
-                val json = Json.decodeFromString<HashMap<String, List<String>>>(outlineText)
-                documentSummary.outline = json
-            } catch (e: Exception) {
-                logger.warn(e) {"Can't parse hashmap of arrays from [$outlineText], won't save outline" }
-            }
-        }
+        outline.asSequence().forEach { documentSummary.outline.put(it.key.lowercase(), it.value) }
 
         // output and cleanup. If we are actually processing this we could just return the json rather than only logging
 
@@ -177,6 +163,26 @@ class DocumentExtractor(
         }
 
         logger.debug { newEntities }
+
+        val outlineText = summarizer.predictTextSummarization(
+            template = TEMPLATE,
+            content = summary,
+            question = outlinePrompt
+        )
+
+        // these are places that we'll have to add robustness. The model of course will not always give us the format
+        // we are looking for. We could accomodate by asking different questions based on the corpus of documents that
+        // we are trying to analyze. It all doesn't have to be llm-based. We could pull some stuctured docs out if
+        // structure is known to exists. Finally, we can catch json errors and just have empty elements as well.
+
+        if (outlineText != null) {
+            try {
+                val json = Json.decodeFromString<JsonObject>(outlineText)
+                json.entries.asSequence().forEach { outline.add(it) }
+            } catch (e: Exception) {
+                logger.warn(e) {"Can't parse hashmap of arrays from [$outlineText], won't save outline" }
+            }
+        }
     }
 
 
