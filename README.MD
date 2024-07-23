@@ -8,8 +8,18 @@ This project is meant to illustrate some ideas around extracting information fro
 
 This project is hosted on github and is available publicly
 
-git clone blah blah
+git@github.com:browndar/MedicalRecords.git
 
-## get service credentials
+## add service credentials
 
-I've provided service credentials. Copy this file to 
+I've provided service credentials for my account with vertex. I'll disable them after a some time. Copy this file to 'src/main/resources'. It must have the same name as was provided (ending in json file extension as well)
+
+## build
+
+./gradlew build
+
+## run
+
+assuming no failures, you can simply run the main class
+
+./gradlew run
