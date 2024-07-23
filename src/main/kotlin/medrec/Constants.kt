@@ -60,7 +60,7 @@ class Constants {
 
         val EXTRACT_ENTITIES_PROMPT = "Extract names and values of entities in this document including but not limited to name, date of birth, patient location, accident location, phone, fax, account, insurance company, insured id in the above document as a flattened json hashmap?"
 
-        val OUTLINE_PROMPT = "Can you summarize this document in small outline consisting of a map of json elements?"
+        val OUTLINE_PROMPT = "Create an outline of this document consisting of a map of json elements?"
 
 
     }
