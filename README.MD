@@ -16,17 +16,17 @@ I've provided service credentials for my account with vertex. I'll disable them 
 
 ## build
 
-./gradlew build
+````./gradlew build````
 
 ## run
 
 assuming no failures, you can simply run the main class
 
-./gradlew run
+````./gradlew run````
 
 this will run the program against the supplied example. The program also takes a single argument specifying the document to process
 
- ./gradlew run --args="ChartNotes.txt"
+````./gradlew run --args="ChartNotes.txt"````
 
 In this case ChartNotes.txt is a sibling file of build.gradle.kts at the root of the repository
 
@@ -34,7 +34,7 @@ In this case ChartNotes.txt is a sibling file of build.gradle.kts at the root of
 
 ## My approach
 
-My approach was to stream the document until I reach a threshold of tokens. Then I process the docuemnt thus far, keeping track of a running summary and a list of key entities. After I have run through the entire document:
+My approach was to stream the document until I reach a threshold of tokens. Then I process the document thus far, keeping track of a running summary and a list of key entities. After I have run through the entire document:
 
 * I finalize the summary with a predict call, 
 * I write out the entities that have been discovered, 
@@ -55,7 +55,10 @@ Q: this is the predict text prompt?
 A:
 ````
 
-I then extract the answer returned back
+* DOCUMENT is the text that I want to summarize in some way with the model
+* I can guide training by asking an answering my own questions
+* Finally I can ask a quesiton of the model. 
+* The prompts can all by found in the constant class
 
 ## Some comments about my approach
 
@@ -64,6 +67,8 @@ I then extract the answer returned back
 * Vertex auth. If I were hosting a solution I would have better options on using the vertex api without supplying service creds but this seemed like a viable solution for having conversations around prompt engineering and such. But I'm assuming that this sort of infrastructure considerations are not incredibly important to our current discussions.
 * Prompt limits. Usually prompts have to be something like 4K tokens or less. There are certainly edge cases around summarizing large docs. My overall summary would overcome that limit with larger documents. 
 * Rolling summary. For sufficiently large documents you can't just throw one prompt at a model to get a summary. I illustrated a couple of approached, such as building a summary as you iterate through the document as I do with the actual summary field, or looking to extract what I can as I iterate through the document as I do with the entities data structure. These are illustrations.
+* Config. I have a bunch of constants that I use to build up the model and test. It would make more sense to have these be in some parsed configuration file depending on the platform (application.yaml for spring for example)
+* Caching. Since I was testing a fair amount I put together a quick caching mecanism to help speed up calls that I have recently made. Not much value when actually looking to extract documents. 
 
 ## Learning some new tricks
 
