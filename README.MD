@@ -147,4 +147,4 @@ I wanted to take some time to learn some new things if I was going to take the t
 
 * Windows. I installed everything from scractch on my surface pro. I have been using a mac for several decades and was curious what the experience would be like away from that ecosystem. Turns out it's fairly painful! Lots of little hiccups. Getting more comfy but it definitely has been a bit of a slog for me to develop away from mac.
 * Google vertex ai. I had some different choices to look at. I pay for gemini so I figured I'd look into vertex. I had played around with chatgpt and just a little in the hugging face infrastructure to deploy but hadn't really used an api that much for prompts.
-* Kotlin. I have been looking into some different tech stacks with some of my free time and used this as an excuse to give kotlin a look. So far I am quite impressed. ````
+* Kotlin. I have been looking into some different tech stacks with some of my free time and used this as an excuse to give kotlin a look. So far I am quite impressed.
